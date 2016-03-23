@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.xiaoyu.ssm.mapper.IUserOperation">
+<mapper namespace="cn.xiaoyu.ssm.dao.UserDao">
 	<!-- _User是配置的别名  -->
 	<select id="getUserById" parameterType="int" resultType="_User">
 		select * from user where id = #{id}
 	</select>
 	
-	<select id="getUserByEmail" parameterType="string" resultMap="_User">
+	<select id="getUserByEmail" parameterType="string" resultType="_User">
 		select * from user where email = #{email}
 	</select>
 
@@ -34,7 +34,7 @@
 		为"true"表明要MyBatis获取由数据库自动生成的主 键；keyProperty="id"指定把获取到的主键值注入 到Student的id属性 -->
 	<insert id="saveUser" parameterType="_User" useGeneratedKeys="true"
 		keyProperty="id">
-		insert into user(username,age,address,birth) values (#{username},#{age},#{address},#{birth})
+		insert into user(username,password,email,birth) values (#{username},#{password},#{email},#{birth})
 	</insert>
     
 </mapper>

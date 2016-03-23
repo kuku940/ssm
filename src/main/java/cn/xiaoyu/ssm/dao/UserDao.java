@@ -26,7 +26,7 @@ public interface UserDao {
 	// 保存用户
 	public void saveUser(User user);
 
-	@Update("update user set username=#{username},age=#{age},address=#{address},birth=#{birth} where id=#{id}")
+	@Update("update user set username=#{username},email=#{email},password=#{password},birth=#{birth} where id=#{id}")
 	public void updateUser(User user);
 
 	@Delete("delete from user where id=#{id}")
