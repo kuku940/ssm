@@ -11,7 +11,7 @@ public class User {
 	private int id;
 	private String username;
 	private String email;
-	private Date date;
+	private Date birth;
 	private String password;
 	public int getId() {
 		return id;
@@ -31,11 +31,11 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Date getDate() {
-		return date;
+	public Date getBirth() {
+		return birth;
 	}
-	public void setDate(Date date) {
-		this.date = date;
+	public void setBirth(Date birth) {
+		this.birth = birth;
 	}
 	public String getPassword() {
 		return password;

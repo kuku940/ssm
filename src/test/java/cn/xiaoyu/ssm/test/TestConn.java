@@ -19,7 +19,8 @@ public class TestConn {
 		
 	@Test
 	public void openSession(){
-		System.out.println(ctx.getBean("sqlSessionFactory"));;
+		System.out.println(ctx.getBean("sqlSessionFactory"));
+		Object bean = ctx.getBean("userMapper");
 	}
 
 }

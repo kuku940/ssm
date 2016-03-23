@@ -4,7 +4,7 @@
 <configuration>
 	<!-- 对应的是spring bean的加载 -->
 	<typeAliases>
-		<typeAlias alias="User" type="cn.xiaoyu.ssm.domain.User" />
+		<typeAlias alias="_User" type="cn.xiaoyu.ssm.domain.User" />
 	</typeAliases>
 
 	<!-- 注释这个在于springmvc整合的时候，spring的配置文件中bean.xml文件已经配置了这样的内容，所以会产生冲突，这就会导致出现报错 
