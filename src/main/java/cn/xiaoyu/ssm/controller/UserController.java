@@ -4,10 +4,11 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
+import cn.xiaoyu.ssm.domain.User;
 import cn.xiaoyu.ssm.service.UserService;
 
 /**
@@ -17,17 +18,25 @@ import cn.xiaoyu.ssm.service.UserService;
  */
 
 @Controller
+@SessionAttributes("loginUser")
 @RequestMapping("/user")
 public class UserController {
-	private UserService userService;
 	@Resource(name="userService")
+	private UserService userService;
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
 		
-	@RequestMapping(value="/{id}",method=RequestMethod.GET)
-	public String show(@PathVariable(value="id") int id,Model model){
-		model.addAttribute(userService.getUserById(id));
-		return "user/show";
+	@RequestMapping(value="/regist",method=RequestMethod.GET)
+	public String regist(Model model){
+		System.out.println("hello world!");
+		return "user/regist";
+	}
+	
+	@RequestMapping(value="/regist",method=RequestMethod.POST)
+	public String regist(User user,String confirmpass){
+		System.out.println(confirmpass);
+		System.out.println(user.getUsername());
+		return "user/login";
 	}
 }
