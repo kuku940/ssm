@@ -130,18 +130,18 @@
 		<!-- log end -->
 
 		<!-- 添加servlet3.0核心包 -->
-        <dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 		</dependency>
-        <dependency>
+		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.2.1-b03</version>
 		</dependency>
-        <!-- jstl标签库 -->
-        <dependency>
+		<!-- jstl标签库 -->
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
@@ -152,19 +152,26 @@
 			<version>1.1.2</version>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<finalName>ssm</finalName>
-		<outputDirectory>D:\develop\apache-tomcat-8.0.32\webapps</outputDirectory>
+		<!-- 配置插件  tomcat-user里面的配置文件
+		<role rolename="manager"/>  
+		<role rolename="manager-gui"/>  
+		<role rolename="manager-script" />  
+		<user username="xiaoyu" password="123456" roles="manager,manager-gui,manager-script"/> 
+		-->
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>tomcat-maven-plugin</artifactId>
-				<version>1.0-beta-1</version>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
 				<configuration>
-					<url>http://127.0.0.1/manager</url>
-					<server>manager</server>
-					<URIEncoding>UTF-8</URIEncoding>
+					<port>80</port>
+					<path>/ssm</path>
+					<url>http://localhost/manager/text</url>
+					<username>xiaoyu</username>
+					<password>123456</password>
+					<update>true</update>
 				</configuration>
 			</plugin>
 		</plugins>
