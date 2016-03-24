@@ -34,7 +34,7 @@ public class TestMybatis {
  
     @Test
     public void testGetUserById(){
-        User user = userService.getUserById(2);
+        User user = userService.getUserById(1);
         System.out.println(user.getUsername());
 		System.out.println(user.getEmail());
     }

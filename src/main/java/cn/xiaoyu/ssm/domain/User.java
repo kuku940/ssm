@@ -2,6 +2,8 @@ package cn.xiaoyu.ssm.domain;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 /**
  * @author 章小雨
  * @date 2016年3月15日
@@ -11,6 +13,7 @@ public class User {
 	private int id;
 	private String username;
 	private String email;
+	@DateTimeFormat(pattern="yyyy-MM-dd")  
 	private Date birth;
 	private String password;
 	public int getId() {

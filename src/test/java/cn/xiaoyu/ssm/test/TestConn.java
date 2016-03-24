@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import cn.xiaoyu.ssm.service.UserService;
+
 /**
  * @author 章小雨
  * @date 2016年3月15日
@@ -20,7 +22,7 @@ public class TestConn {
 	@Test
 	public void openSession(){
 		System.out.println(ctx.getBean("sqlSessionFactory"));
-		Object bean = ctx.getBean("userService");
+		UserService bean = (UserService) ctx.getBean("userService");
 	}
 
 }
