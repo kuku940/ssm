@@ -1,13 +1,10 @@
 package cn.xiaoyu.ssm.controller;
 
-import java.util.Date;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +13,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import cn.xiaoyu.ssm.domain.Mail;
 import cn.xiaoyu.ssm.domain.User;
 import cn.xiaoyu.ssm.service.UserService;
+import cn.xiaoyu.ssm.util.CaptchaUtil;
+import cn.xiaoyu.ssm.util.Constant;
 import cn.xiaoyu.ssm.util.MD5Util;
 import cn.xiaoyu.ssm.util.MailUtil;
 
@@ -99,7 +98,13 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/login",method=RequestMethod.POST)
-	public String login(User user,Model model){
+	public String login(User user,String captcha,HttpServletRequest request,Model model){
+		String sessionCaptcha = (String) request.getSession().getAttribute(Constant.CAPTCHA);
+		if(captcha == null || !(captcha.equalsIgnoreCase(sessionCaptcha))){
+			model.addAttribute("user",user);
+			model.addAttribute("error","验证码不正确！");
+			return "user/login";
+		}
 		User u = userService.getUserByEmail(user.getEmail());
 		if(u != null && u.getPassword().equals(user.getPassword())){
 			return "user/list";
