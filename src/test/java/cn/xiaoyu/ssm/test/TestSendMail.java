@@ -19,8 +19,8 @@ public class TestSendMail {
 		mail.setSubject("邮箱验证信息");
 		String message = MD5Util.encrypt("roingeek@qq.com");
 		System.out.println(message);
-		mail.setMessage(message);
+		mail.setMessage("你好，这儿是信息内容："+message);
 		
-		//new MailUtil().send(mail);
+		MailUtil.send(mail);
 	}
 }

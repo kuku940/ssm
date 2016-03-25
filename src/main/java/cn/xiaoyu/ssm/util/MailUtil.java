@@ -1,8 +1,19 @@
 package cn.xiaoyu.ssm.util;
 
+import java.util.Calendar;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
+
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import org.apache.log4j.Logger;
 
 import cn.xiaoyu.ssm.domain.Mail;
 
@@ -11,10 +22,56 @@ import cn.xiaoyu.ssm.domain.Mail;
  * @date 2016年3月24日
  * @email roingeek@qq.com
  */
-public class MailUtil {
-	protected final Logger logger = Logger.getLogger(getClass());  
+public class MailUtil { 
+	/**
+	 * 使用JavaMail发送一封简单的邮件
+	 * 1.创建包含邮件服务器的网络连接信息的Session对象
+	 * 2.创建代表邮件内容的Message对象
+	 * 3.创建Transport对象、连接服务器、发送Message、关闭连接
+	 * @param mail
+	 * @return
+	 */	
+	public static boolean send(final Mail mail){
+		try {
+			Properties props = new Properties();
+			props.put("mail.host", mail.getHost());
+			props.put("mail.transport.protocol", "stmp");
+			props.put("mail.smtp.auth", "true");
+			
+			// 创建一个Authenticator对象
+			Authenticator auth = new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication(){
+					return new PasswordAuthentication(mail.getUsername(),mail.getPassword());
+				}
+			};
+			
+			// 创建Session对象
+			Session session = Session.getInstance(props,auth);
+			session.setDebug(true); //开启Session的debug模式，这样就可以查看到程序发送Email的运行状态
+						
+			// 创建邮件
+			MimeMessage message = new MimeMessage(session);
+			String nickname = MimeUtility.encodeText(mail.getNickname());
+			message.setFrom(new InternetAddress(nickname+"<"+mail.getUsername()+">"));
+			/** 
+			 * 	Message.RecipientType.TO	消息接受者
+			 *	Message.RecipientType.CC	消息抄送者
+			 *	Message.RecipientType.BCC	匿名抄送接收者 	
+			 **/
+			message.addRecipient(Message.RecipientType.TO,new InternetAddress(mail.getReceiver()));
+			
+			message.setSubject(mail.getSubject());
+			message.setSentDate(Calendar.getInstance().getTime());
+			message.setContent(mail.getMessage(),"text/html;charset=UTF-8");
+			
+			Transport.send(message);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 	
-    public boolean send(Mail mail) {  
+    public static boolean sendSingleMail(Mail mail) {  
         // 发送email  
         HtmlEmail email = new HtmlEmail();  
         try {  
@@ -33,15 +90,9 @@ public class MailUtil {
             // 要发送的信息，由于使用了HtmlEmail，可以在邮件内容中使用HTML标签  
             email.setMsg(mail.getMessage());  
             // 发送  
-            email.send();  
-            if (logger.isDebugEnabled()) {  
-                logger.debug(mail.getSender() + " 发送邮件到 " + mail.getReceiver());  
-            }  
+            email.send();    
             return true;  
-        } catch (EmailException e) {  
-            e.printStackTrace();  
-            logger.info(mail.getSender() + " 发送邮件到 " + mail.getReceiver()  
-                    + " 失败");  
+        } catch (EmailException e) {   
             return false;  
         }  
     } 

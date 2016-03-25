@@ -60,7 +60,7 @@ public class UserController {
 			mail.setSubject("邮箱消息验证");
 			String message = user.getUsername()+"您好：<br/>&nbsp;&nbsp;欢迎你注册我们的网站，点击<a href='http://localhost/ssm/user/reg?email="+user.getEmail()+"&flag="+MD5Util.encrypt(user.getEmail()+"salt2016")+"'>这儿</a>验证邮箱!";
 			mail.setMessage(message);
-			new MailUtil().send(mail);
+			MailUtil.send(mail);
 			
 			model.addAttribute("user", user);
 			return "user/login";
