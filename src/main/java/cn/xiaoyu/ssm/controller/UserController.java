@@ -1,8 +1,14 @@
 package cn.xiaoyu.ssm.controller;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +19,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import cn.xiaoyu.ssm.domain.Mail;
 import cn.xiaoyu.ssm.domain.User;
 import cn.xiaoyu.ssm.service.UserService;
-import cn.xiaoyu.ssm.util.CaptchaUtil;
 import cn.xiaoyu.ssm.util.Constant;
 import cn.xiaoyu.ssm.util.MD5Util;
 import cn.xiaoyu.ssm.util.MailUtil;
@@ -28,6 +33,8 @@ import cn.xiaoyu.ssm.util.MailUtil;
 @SessionAttributes("loginUser")
 @RequestMapping("/user")
 public class UserController {
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Resource(name="userService")
 	private UserService userService;
 	public void setUserService(UserService userService) {
@@ -60,7 +67,7 @@ public class UserController {
 			String message = user.getUsername()+"您好：<br/>&nbsp;&nbsp;欢迎你注册我们的网站，点击<a href='http://localhost/ssm/user/reg?email="+user.getEmail()+"&flag="+MD5Util.encrypt(user.getEmail()+"salt2016")+"'>这儿</a>验证邮箱!";
 			mail.setMessage(message);
 			MailUtil.send(mail);
-			
+			logger.info("向新注册用户{}发送验证邮件",user.getEmail());
 			model.addAttribute("user", user);
 			return "user/login";
 		}else{
@@ -107,6 +114,7 @@ public class UserController {
 		}
 		User u = userService.getUserByEmail(user.getEmail());
 		if(u != null && u.getPassword().equals(user.getPassword())){
+			logger.info("用户{}于{}登陆成功",user.getEmail(),new Date());
 			return "user/list";
 		}else{
 			model.addAttribute("user",user);
