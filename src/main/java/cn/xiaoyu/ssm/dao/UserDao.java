@@ -3,6 +3,8 @@ package cn.xiaoyu.ssm.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import cn.xiaoyu.ssm.domain.User;
@@ -31,4 +33,7 @@ public interface UserDao {
 
 	@Delete("delete from user where id=#{id}")
 	public void deleteUser(int id);
+	
+	@Select("select * from user limit #{offset},#{pageSize}")
+	public List<User> getListForPage(@Param("offset") int offset,@Param("pageSize") int pageSize);
 }

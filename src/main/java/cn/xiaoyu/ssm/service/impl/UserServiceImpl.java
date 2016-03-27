@@ -43,5 +43,10 @@ public class UserServiceImpl implements UserService{
 	public void deleteUser(int id) {
 		this.userDao.deleteUser(id);
 	}
+
+	public List<User> getAllUsers(int pageIndex, int pageSize) {
+		int offset = (pageIndex - 1) * pageSize;
+		return this.userDao.getListForPage(offset, pageSize);
+	}
 	
 }

@@ -1,18 +1,18 @@
 package cn.xiaoyu.ssm.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -115,11 +115,18 @@ public class UserController {
 		User u = userService.getUserByEmail(user.getEmail());
 		if(u != null && u.getPassword().equals(user.getPassword())){
 			logger.info("用户{}于{}登陆成功",user.getEmail(),new Date());
-			return "user/list";
+			return "redirect:/user/list";
 		}else{
 			model.addAttribute("user",user);
 			model.addAttribute("error","用户名或密码不正确！");
 			return "user/login";
 		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/list",method=RequestMethod.GET)
+	public Object list(@RequestParam(defaultValue="1")int pageIndex,@RequestParam(defaultValue="10")int pageSize){		
+		List<User> users = userService.getAllUsers(pageIndex,pageSize);
+		return users;
 	}
 }

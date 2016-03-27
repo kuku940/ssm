@@ -4,6 +4,9 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author 章小雨
  * @date 2016年3月15日
@@ -13,8 +16,12 @@ public class User {
 	private int id;
 	private String username;
 	private String email;
-	@DateTimeFormat(pattern="yyyy-MM-dd")  
+	/**
+	 * DateTimeFormat是springmvc绑定参数的格式
+	 */
+	@DateTimeFormat(pattern="yyyy-MM-dd") 
 	private Date birth;
+	@JsonIgnore
 	private String password;
 	public int getId() {
 		return id;
