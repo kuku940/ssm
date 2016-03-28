@@ -203,6 +203,13 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		
+		<!-- 消息队列activemq -->
+		<dependency>
+		  <groupId>org.apache.activemq</groupId>
+		  <artifactId>activemq-all</artifactId>
+		  <version>5.13.2</version>
+		</dependency>
+		
 	</dependencies>
 	
 	<build>
