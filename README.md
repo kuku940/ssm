@@ -39,6 +39,7 @@
 	搜索引擎：lucene,solr 
 	集群技术：hadoop,spark
 	开发工具：eclipse,myeclipse,IntelliJ IDEA,sublime,editplus
+	版本控制：git，svn
 	
 	
 	
