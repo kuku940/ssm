@@ -4,10 +4,16 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.Session;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +46,12 @@ public class UserController {
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-		
+	@Resource(name="jmsQueueTemplate")
+	private JmsTemplate jmsTemplate;
+	public void setJmsTemplate(JmsTemplate jmsTemplate) {
+		this.jmsTemplate = jmsTemplate;
+	}
+
 	@RequestMapping(value="/regist",method=RequestMethod.GET)
 	public String regist(Model model){
 		model.addAttribute("user", new User());
@@ -61,13 +72,22 @@ public class UserController {
 			userService.saveUser(user);
 			
 			// 发送一封邮件 来确定注册信息
-			Mail mail = new Mail();
+			final Mail mail = new Mail();
 			mail.setReceiver(user.getEmail());
 			mail.setSubject("邮箱消息验证");
 			String message = user.getUsername()+"您好：<br/>&nbsp;&nbsp;欢迎你注册我们的网站，点击<a href='http://localhost/ssm/user/reg?email="+user.getEmail()+"&flag="+MD5Util.encrypt(user.getEmail()+"salt2016")+"'>这儿</a>验证邮箱!";
 			mail.setMessage(message);
-			MailUtil.send(mail);
-			logger.info("向新注册用户{}发送验证邮件",user.getEmail());
+			//MailUtil.send(mail);
+			//logger.info("向新注册用户{}发送验证邮件",user.getEmail());
+			jmsTemplate.send(new MessageCreator() {
+	            public Message createMessage(Session session) throws JMSException {
+	                MapMessage message = session.createMapMessage();
+	                message.setObject("mail", mail);
+	                return message;
+	            }
+	        });
+			logger.info("发送给注册用户{}验证邮件加入队列成功！",user.getEmail());
+			
 			model.addAttribute("user", user);
 			return "user/login";
 		}else{
