@@ -195,7 +195,7 @@
 			<version>1.4</version>
 		</dependency>
 		
-		<!-- json相关包 -->
+		<!-- json-lib相关包 -->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>
@@ -203,11 +203,18 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		
-		<!-- 消息队列activemq -->
+		<!-- 动态编译 -->
 		<dependency>
-		  <groupId>org.apache.activemq</groupId>
-		  <artifactId>activemq-all</artifactId>
-		  <version>5.13.2</version>
+		    <groupId>org.javassist</groupId>
+		    <artifactId>javassist</artifactId>
+		    <version>3.20.0-GA</version>
+		</dependency>
+		
+		<!-- google序列化 -->
+		<dependency>
+		    <groupId>com.google.protobuf</groupId>
+		    <artifactId>protobuf-java</artifactId>
+		    <version>2.6.1</version>
 		</dependency>
 		
 	</dependencies>

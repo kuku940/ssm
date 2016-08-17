@@ -16,6 +16,66 @@
     <context:property-placeholder location="classpath:jdbc.properties" />
 	<!-- 设定Spring 去哪些包中找Annotation -->
 	<context:component-scan base-package="cn.xiaoyu.ssm.service" />
+	
+	<!-- activemq 消息队列  开始-->
+    <!-- 连接工厂 -->
+    <bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">  
+        <property name="brokerURL" value="tcp://localhost:61616" />  
+    </bean>  
+    
+    <!-- 消息模板 -->
+    <bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">  
+        <property name="connectionFactory" ref="activeMQConnectionFactory" />  
+        <property name="defaultDestination" ref="queueDestination" /> 
+    </bean>
+    <!-- 配置p2p消息目标 -->
+    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <!-- 目标，在ActiveMQ管理员控制台创建 http://localhost:8161/admin/queues.jsp -->
+        <constructor-arg index="0" value="apache.mq.queue" />  
+    </bean>
+    <!-- 实现接口的方式生成队列 -->
+    <bean id="consumerMessageListener" class="cn.xiaoyu.ssm.jms.ConsumerMessageListener" />
+    <!-- p2p消息模板 -->
+    <bean id="queueMessageListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="activeMQConnectionFactory" />  
+        <property name="destination" ref="queueDestination" />
+        <property name="messageListener" ref="consumerMessageListener" />
+        <!-- 接收消息超时设置为5秒，否则消息队列会发生阻塞 -->
+        <property name="receiveTimeout" value="5000" />
+    </bean>
+    
+     <!-- 消息模板 -->
+    <bean id="jmsTopicTemplate" class="org.springframework.jms.core.JmsTemplate">  
+        <property name="connectionFactory" ref="activeMQConnectionFactory" />  
+        <property name="defaultDestination" ref="topicDestination" /> 
+    </bean>
+    <!-- 配置sub/pub消息目标 -->
+    <bean id="topicDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <constructor-arg index="0" value="apache.mq.topic" />  
+    </bean> 
+    <bean id="firstMessageListener" class="cn.xiaoyu.ssm.jms.FirstMessageListener"></bean>
+    <bean id="secondMessageListener" class="cn.xiaoyu.ssm.jms.SecondMessageListener"></bean>
+    
+    <!-- sub/pub消息模板 如下配置了两个消费者 -->
+    <bean id="firstTopicMessageListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="activeMQConnectionFactory" />  
+        <property name="destination" ref="topicDestination" />
+        <property name="messageListener" ref="firstMessageListener" />
+        <!-- 配置是否为发布订阅者模式，默认为false（false为队列模式） -->
+        <property name="pubSubDomain" value="true" />
+        <!-- 接收消息超时设置为5秒，否则消息队列会发生阻塞 -->
+        <property name="receiveTimeout" value="5000" />
+    </bean>
+    <bean id="secondTopicMessageListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="activeMQConnectionFactory" />  
+        <property name="destination" ref="topicDestination" />
+        <property name="messageListener" ref="secondMessageListener" />
+        <!-- 配置是否为发布订阅者模式，默认为false -->
+        <property name="pubSubDomain" value="true" />
+        <!-- 接收消息超时设置为5秒，否则消息队列会发生阻塞 -->
+        <property name="receiveTimeout" value="5000" />   
+    </bean>
+    <!-- activemq 消息队列 结束-->	
 
 	<!--本示例采用DBCP连接池，应预先把DBCP的jar包复制到工程的lib目录下 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"

@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import cn.xiaoyu.ssm.service.UserService;
 
@@ -16,7 +17,8 @@ public class TestConn {
 	ApplicationContext ctx;
 	@Before
 	public void init(){
-		 ctx = new ClassPathXmlApplicationContext("beans.xml");  
+		 //ctx = new ClassPathXmlApplicationContext("beans.xml");  
+		ctx = new FileSystemXmlApplicationContext("classpath*:beans.xml");
 	}
 		
 	@Test
